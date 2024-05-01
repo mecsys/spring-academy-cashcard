@@ -4,8 +4,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,15 +57,13 @@ public class CashCardController {
   }
 
   @GetMapping()
-  public ResponseEntity<List<CashCard>> findAll(Pageable pageable) {
-
-      Page<CashCard> page = cashCardRepository.findAll(
-              PageRequest.of(
-                      pageable.getPageNumber(),
-                      pageable.getPateSize(),
-                      pageable.getSortOr(Sort.by(Sort.Direction.DESC, "amount"))));
-
-      return ResponseEntity.ok(page.getContent());
+  private ResponseEntity<List<CashCard>> findAll(Pageable pageable) {
+    Page<CashCard> page = cashCardRepository.findAll(
+            PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize()
+    ));
+    return ResponseEntity.ok(page.getContent());
   }
   
 
